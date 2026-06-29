@@ -27,26 +27,32 @@ Let the black pixel be denoted by $0$ and the white pixel by $255$.
 
 #### Case 1: Secret Pixel is White ($s = 255$)
 We choose the same subpixel configuration for both shares. A random bit $A \in \{0, 1\}$ is generated:
+
 $$
 \text{Share 1} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}, \quad \text{Share 2} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}
 $$
 
 *Superposition (using point-wise minimum):*
+
 $$
 \text{Share 1} \oplus \text{Share 2} = \min(\text{Share 1}, \text{Share 2}) = [0, 255] \text{ or } [255, 0]
 $$
+
 The superimposed pixel contains one black and one white subpixel (perceived as 50% gray by the human eye).
 
 #### Case 2: Secret Pixel is Black ($s = 0$)
 We choose complementary subpixel configurations for the two shares:
+
 $$
 \text{Share 1} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}, \quad \text{Share 2} = \begin{cases} [255, 0] & \text{if } A = 1 \\ [0, 255] & \text{if } A = 0 \end{cases}
 $$
 
 *Superposition (using point-wise minimum):*
+
 $$
 \text{Share 1} \oplus \text{Share 2} = \min(\text{Share 1}, \text{Share 2}) = [0, 0]
 $$
+
 The superimposed pixel is 100% black.
 
 Since the selection of subpixels depends on the random bit $A$, looking at any single share reveals nothing but random noise (entropy is maximized, giving $0$ information leakage).
@@ -76,6 +82,7 @@ The secret binary image is divided into a grid of blocks matching the size $H \t
 
 #### Case A: The secret pixel is White (Background)
 Assign the same template to both shares:
+
 $$
 \text{Share 1}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}, \quad \text{Share 2}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}
 $$
@@ -84,6 +91,7 @@ $$
 
 #### Case B: The secret pixel is Black (Secret Foreground)
 Assign opposite templates to the shares:
+
 $$
 \text{Share 1}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}, \quad \text{Share 2}^{(r,c)} = \begin{cases} P & \text{if } A = 0 \\ N & \text{if } A = 1 \end{cases}
 $$
