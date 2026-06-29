@@ -25,27 +25,29 @@ In a classic $2$-out-of-$2$ visual cryptography scheme, a secret binary image is
 
 Let the black pixel be denoted by $0$ and the white pixel by $255$.
 
-* **Secret Pixel is White ($s = 255$):**
-  We choose the same subpixel configuration for both shares. A random bit $A \in \{0, 1\}$ is generated:
-  $$
-  \text{Share 1} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}, \quad \text{Share 2} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}
-  $$
-  *Superposition (using point-wise minimum):*
-  $$
-  \text{Share 1} \oplus \text{Share 2} = \min(\text{Share 1}, \text{Share 2}) = [0, 255] \text{ or } [255, 0]
-  $$
-  The superimposed pixel contains one black and one white subpixel (perceived as $50\%$ gray by the human eye).
+#### Case 1: Secret Pixel is White ($s = 255$)
+We choose the same subpixel configuration for both shares. A random bit $A \in \{0, 1\}$ is generated:
+$$
+\text{Share 1} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}, \quad \text{Share 2} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}
+$$
 
-* **Secret Pixel is Black ($s = 0$):**
-  We choose complementary subpixel configurations for the two shares:
-  $$
-  \text{Share 1} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}, \quad \text{Share 2} = \begin{cases} [255, 0] & \text{if } A = 1 \\ [0, 255] & \text{if } A = 0 \end{cases}
-  $$
-  *Superposition (using point-wise minimum):*
-  $$
-  \text{Share 1} \oplus \text{Share 2} = \min(\text{Share 1}, \text{Share 2}) = [0, 0]
-  $$
-  The superimposed pixel is $100\%$ black.
+*Superposition (using point-wise minimum):*
+$$
+\text{Share 1} \oplus \text{Share 2} = \min(\text{Share 1}, \text{Share 2}) = [0, 255] \text{ or } [255, 0]
+$$
+The superimposed pixel contains one black and one white subpixel (perceived as 50% gray by the human eye).
+
+#### Case 2: Secret Pixel is Black ($s = 0$)
+We choose complementary subpixel configurations for the two shares:
+$$
+\text{Share 1} = \begin{cases} [0, 255] & \text{if } A = 1 \\ [255, 0] & \text{if } A = 0 \end{cases}, \quad \text{Share 2} = \begin{cases} [255, 0] & \text{if } A = 1 \\ [0, 255] & \text{if } A = 0 \end{cases}
+$$
+
+*Superposition (using point-wise minimum):*
+$$
+\text{Share 1} \oplus \text{Share 2} = \min(\text{Share 1}, \text{Share 2}) = [0, 0]
+$$
+The superimposed pixel is 100% black.
 
 Since the selection of subpixels depends on the random bit $A$, looking at any single share reveals nothing but random noise (entropy is maximized, giving $0$ information leakage).
 
@@ -71,18 +73,22 @@ The secret binary image is divided into a grid of blocks matching the size $H \t
 1. Retrieve the corresponding character template index from the public text. Let its templates be $P$ and $N$.
 2. Generate a random bit $A \in \{0, 1\}$.
 3. Inspect the intensity of the secret image pixel corresponding to the block:
-   * **If the secret pixel is White (Background):**
-     Assign the same template to both shares:
-     $$
-     \text{Share 1}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}, \quad \text{Share 2}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}
-     $$
-     *Superposition:* $\min(\text{Share 1}, \text{Share 2}) = N \text{ or } P$. The character remains visible.
-   * **If the secret pixel is Black (Secret Foreground):**
-     Assign opposite templates to the shares:
-     $$
-     \text{Share 1}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}, \quad \text{Share 2}^{(r,c)} = \begin{cases} P & \text{if } A = 0 \\ N & \text{if } A = 1 \end{cases}
-     $$
-     *Superposition:* $\min(\text{Share 1}, \text{Share 2}) = \min(P, N) = \mathbf{0}$ (solid black block). The character is destroyed.
+
+#### Case A: The secret pixel is White (Background)
+Assign the same template to both shares:
+$$
+\text{Share 1}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}, \quad \text{Share 2}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}
+$$
+
+*Superposition:* $\min(\text{Share 1}, \text{Share 2}) = N \text{ or } P$ (the character remains visible).
+
+#### Case B: The secret pixel is Black (Secret Foreground)
+Assign opposite templates to the shares:
+$$
+\text{Share 1}^{(r,c)} = \begin{cases} N & \text{if } A = 0 \\ P & \text{if } A = 1 \end{cases}, \quad \text{Share 2}^{(r,c)} = \begin{cases} P & \text{if } A = 0 \\ N & \text{if } A = 1 \end{cases}
+$$
+
+*Superposition:* $\min(\text{Share 1}, \text{Share 2}) = \min(P, N) = \mathbf{0}$ (completely black block, destroying the character).
 
 #### Visual Security
 On their own, both Share 1 and Share 2 are grids of public letters randomly alternating between positive and negative styles. Because of this random distribution, they both look like standard patterned text grids and leak no information about the secret shape. However, when overlaid, the blocks corresponding to the secret image's black silhouette turn solid black, while the background blocks continue to display the public characters, revealing the secret image.
